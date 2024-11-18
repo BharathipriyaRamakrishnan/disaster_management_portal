@@ -1,0 +1,50 @@
+.donation-form-container {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    width: 500px;
+    margin: auto;
+    text-align: center;
+  }
+  
+  .qr-code {
+    margin-bottom: 20px;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+    text-align: left;
+  }
+  
+  .lab {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .inp {
+    width: 96%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .pay {
+    width: 100%;
+    padding: 10px;
+    background-color: #0989ff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .pay:hover {
+    background-color: #0870d0;
+  }
+  
+  .messagedn {
+    margin-top: 15px;
+    color: green;
+  }
+  
