@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import './Donation.css';
 import paymnet from '../assets/images/payment.png';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const DonationForm = () => {
   const [formData, setFormData] = useState({
@@ -11,6 +13,7 @@ const DonationForm = () => {
     amount: '',
   });
   const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,6 +26,9 @@ const DonationForm = () => {
       // Send form data to the backend
       const response = await axios.post('http://localhost:5000/api/donations', formData);
       setMessage(response.data.message);
+      setTimeout(() => {
+        navigate('/');  // Change '/volunteer' to your actual volunteer page route
+      }, 2000); 
       // Clear the form
       setFormData({
         name: '',
