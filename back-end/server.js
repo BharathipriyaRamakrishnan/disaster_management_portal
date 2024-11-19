@@ -20,11 +20,13 @@ mongoose.connect(process.env.MONGO_URI)
 const reportRoutes = require('./routes/reportRoutes');
 const donationRoutes = require('./routes/Donation');
 const requestRoutes = require('./routes/requestRoutes');
+const rescuerRoutes = require('./routes/rescuerRoutes');
 
 // Use Routes
 app.use('/api/report', reportRoutes);
 app.use('/api/donations', donationRoutes);
 app.use('/api/request', requestRoutes);
+app.use('/api/rescuers', rescuerRoutes);
 
 // Server
 app.listen(port, () => {

@@ -8,6 +8,9 @@ import Admin from './pages/Admin/Admin';
 import Rescuer from './pages/Rescuer/Rescuer';
 import Volunteer from './pages/Volunteer/Volunteer';
 import DonationForm from './components/DonationComponent';
+import AdminBlogs from './components/AdminBlogs';
+import AdminReports from './components/AdminReports';
+import AdminrescuerManagement from './components/AdminrescuerManagement';
 
 function App() {
 
@@ -19,6 +22,10 @@ function App() {
       <Route path="/rescuer" element={<Rescuer/>} />
       <Route path="/" element={<Volunteer/>} />
       <Route path="/payment" element={<DonationForm/>} />
+      <Route path ="/AdminBlogs" element={<AdminBlogs/>} />
+      <Route path ="/AdminReports" element={<AdminReports/>} />
+      <Route path ="/AdminrescuerManagement" element={<AdminrescuerManagement/>} />
+      <Route path="/Rescuer" element={<Rescuer/>} />
     </Routes>
     </>
   )
