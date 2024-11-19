@@ -19,6 +19,7 @@ const Volunteer = () => {
           throw new Error(`Server error: ${response.status}`);
         }
         const data = await response.json();
+        
         setIncidents(data);
       } catch (error) {
         console.error("Error fetching incidents:", error);
@@ -87,10 +88,33 @@ const Volunteer = () => {
       handleCloseModal();
     }
   };
-  const handleRequestSubmit = (e) => {
+  const handleRequestSubmit = async (e) => {
     e.preventDefault();
-    alert('Request submitted!');
-    handleCloseModal();
+    const shareLocation = document.querySelector('input[name="requestLocation"]:checked').value;
+    if (shareLocation === 'yes' && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        const { latitude, longitude } = position.coords;
+        const requestData = {
+          description: e.target.requestDescription.value,
+          location: { latitude, longitude },
+          timestamp: new Date().toISOString(),
+        };
+        try {
+          await fetch('http://localhost:5000/api/request', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(requestData),
+          });
+          alert('Request submitted successfully with live location!');
+          handleCloseModal();
+        } catch (error) {
+          alert('Error submitting request.');
+        }
+      });
+    } else {
+      alert('Request not submitted without live location.');
+      handleCloseModal();
+    }
   };
 
   return (
@@ -208,7 +232,7 @@ const Volunteer = () => {
                   <h3>{incident.disasterType}</h3>
                   <p>{incident.description}</p>
                   <p>Location: {incident.location.latitude}, {incident.location.longitude}</p>
-                  <p>Reported on: {incident.timestamp}</p>
+                  <p>Reported on: {incident.date}</p>
                 </li>
               ))}
             </ul>
