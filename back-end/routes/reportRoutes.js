@@ -6,6 +6,7 @@ require('dotenv').config();
 
 // Twilio Client
 const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+const rescuerNumbers = process.env.RESCUER_PHONE_NUMBER.split(',');
 
 // Endpoint to handle report submissions
 router.post('/', async (req, res) => {
@@ -25,12 +26,17 @@ router.post('/', async (req, res) => {
   `;
 
   try {
-    // Send SMS to rescuer
-    await client.messages.create({
-      body: messageBody,
-      from: process.env.TWILIO_PHONE_NUMBER,
-      to: process.env.RESCUER_PHONE_NUMBER,
-    });
+    //Send SMS to rescuer
+    rescuerNumbers.forEach((toNumber) => {
+      client.messages
+          .create({
+              body: messageBody,
+              from: process.env.TWILIO_PHONE_NUMBER,
+              to: toNumber.trim(), // Ensure no extra spaces
+          })
+          .then((message) => console.log(`Message sent to ${toNumber}: ${message.sid}`))
+          .catch((error) => console.error(`Failed to send to ${toNumber}:`, error));
+  });
 
     // Store the report in MongoDB
     const newReport = new Report({

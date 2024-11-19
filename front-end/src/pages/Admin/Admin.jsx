@@ -60,7 +60,7 @@ const Admin = () => {
           <li>Dashboard</li>
           <li>Community</li>
           <li>Reports</li>
-          <li>User Management</li>
+          <li>Rescuer Management</li>
           <button className="lbtn" onClick={handleLogout}>Logout</button>
         </ul>
       </div>
