@@ -10,12 +10,13 @@ import communityImage from '../../assets/images/communityImage.jpg'
 import axios from 'axios';
 
 const Volunteer = () => {
+  const BASE_URL = process.env.REACT_APP_SERVER_URL;
   const navigate = useNavigate();
   const [incidents, setIncidents] = useState([]);
  useEffect(() => {
     const fetchIncidents = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/report");
+        const response = await fetch(`${BASE_URL}/report`);
         if (!response.ok) {
           throw new Error(`Server error: ${response.status}`);
         }
@@ -74,7 +75,7 @@ const Volunteer = () => {
           setIncidents((prevIncidents) => [...prevIncidents, formData]);
 
           try {
-            const response = await fetch('http://localhost:5000/api/report', {
+            const response = await fetch(`${BASE_URL}/report`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -116,7 +117,7 @@ const Volunteer = () => {
           timestamp: new Date().toISOString(),
         };
         try {
-          await fetch('http://localhost:5000/api/request', {
+          await fetch(`{BASE_URL}/request`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(requestData),
@@ -137,7 +138,7 @@ const Volunteer = () => {
 useEffect(() => {
   const fetchBlogs = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/blogs');
+      const response = await fetch(`${BASE_URL}/blogs`);
       const data = await response.json();
       setBlogs(data);
     } catch (error) {
@@ -166,7 +167,7 @@ useEffect(() => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/send-mail', formData);
+      await axios.post(`${BASE_URL}/send-mail`, formData);
       alert('Email sent successfully!');
     } catch (error) {
       console.error('Error sending email:', error);

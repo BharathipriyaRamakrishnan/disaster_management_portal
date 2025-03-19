@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const DonationForm = () => {
+  const BASE_URL = process.env.REACT_APP_SERVER_URL;
   const [formData, setFormData] = useState({
     name: '',
     number: '',
@@ -24,7 +25,7 @@ const DonationForm = () => {
     e.preventDefault();
     try {
       // Send form data to the backend
-      const response = await axios.post('http://localhost:5000/api/donations', formData);
+      const response = await axios.post(`${BASE_URL}/donations`, formData);
       setMessage(response.data.message);
       setTimeout(() => {
         navigate('/');  // Change '/volunteer' to your actual volunteer page route

@@ -163,12 +163,13 @@ const RescuerDashboard = () => {
   const [reports, setReports] = useState([]);
   const [requests, setRequests] = useState([]);
   const navigate = useNavigate();
+  const BASE_URL = process.env.REACT_APP_SERVER_URL;
 
   // Fetch disaster reports
   useEffect(() => {
     const fetchReports = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/report');
+        const response = await fetch(`${BASE_URL}/report`);
         const data = await response.json();
         setReports(data);
       } catch (error) {
@@ -182,7 +183,7 @@ const RescuerDashboard = () => {
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/request');
+        const response = await fetch(`{BASE_URL}/request`);
         const data = await response.json();
         setRequests(data);
       } catch (error) {
@@ -196,7 +197,7 @@ const RescuerDashboard = () => {
 
   const handleCompleteReport = async (id) => {
     try {
-      await fetch(`http://localhost:5000/api/report/${id}/complete`, {
+      await fetch(`${BASE_URL}/report/${id}/complete`, {
         method: 'PUT',
       });
       setReports(reports.map((r) => (r._id === id ? { ...r, resolved: true } : r)));
@@ -209,7 +210,7 @@ const RescuerDashboard = () => {
 
   const handleCompleteRequest = async (id) => {
     try {
-      await fetch(`http://localhost:5000/api/request/${id}/complete`, {
+      await fetch(`${BASE_URL}/request/${id}/complete`, {
         method: 'PUT',
       });
       setRequests(requests.map((r) => (r._id === id ? { ...r, completed: true } : r)));

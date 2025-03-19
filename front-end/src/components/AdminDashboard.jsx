@@ -47,6 +47,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "r
 import "./AdminDashboard.css";
 
 const AdminDashboard = () => {
+  const BASE_URL = process.env.REACT_APP_SERVER_URL;
   const [graphData, setGraphData] = useState([]);
   const [stats, setStats] = useState({
     totalReports: 0,
@@ -64,10 +65,10 @@ const AdminDashboard = () => {
 
     // Fetch stats for cards
     Promise.all([
-      fetch("http://localhost:5000/api/report/dashboard-stats").then((res) => res.json()),
-      fetch("http://localhost:5000/api/request/dashboard-stats").then((res) => res.json()),
-      fetch("http://localhost:5000/api/donations/dashboard-stats").then((res) => res.json()),
-      fetch("http://localhost:5000/api/rescuers/dashboard-stats").then((res) => res.json()),
+      fetch(`${BASE_URL}/report/dashboard-stats`).then((res) => res.json()),
+      fetch(`${BASE_URL}/request/dashboard-stats`).then((res) => res.json()),
+      fetch(`${BASE_URL}/donations/dashboard-stat`).then((res) => res.json()),
+      fetch(`${BASE_URL}/rescuers/dashboard-stats`).then((res) => res.json()),
     ])
       .then(([reports, requests, donations, rescuers]) => {
         setStats({

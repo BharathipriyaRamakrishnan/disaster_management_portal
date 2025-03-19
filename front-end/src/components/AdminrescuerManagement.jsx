@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import AdminSidebar from './AdminSidebar';
-import './AdminRescuerManagement.css';
+import './AdminrescuerManagement.css';
 
 function AdminRescuerManagement() {
+  const BASE_URL = process.env.REACT_APP_SERVER_URL;
   const [editingRescuerId, setEditingRescuerId] = useState(null);
   const [rescuerData, setRescuerData] = useState([]);
   const [filteredRescuers, setFilteredRescuers] = useState([]);
@@ -22,7 +23,7 @@ function AdminRescuerManagement() {
   // Fetch rescuers from the database
   const fetchRescuers = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/rescuers');
+      const response = await fetch(`${BASE_URL}/rescuers`);
       const data = await response.json();
       setRescuerData(data);
       setFilteredRescuers(data); // Initialize the filteredRescuers with all data
@@ -74,7 +75,7 @@ function AdminRescuerManagement() {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/rescuers', {
+      const response = await fetch(`${BASE_URL}/rescuers`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -121,7 +122,7 @@ function AdminRescuerManagement() {
 
     if (!editingRescuerId) return;
 
-    const response = await fetch(`http://localhost:5000/api/rescuers/${editingRescuerId}`, {
+    const response = await fetch(`${BASE_URL}/rescuers/${editingRescuerId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -154,7 +155,7 @@ function AdminRescuerManagement() {
     // Confirm before deleting
     if (window.confirm('Are you sure you want to delete this rescuer?')) {
       try {
-        const response = await fetch(`http://localhost:5000/api/rescuers/${id}`, {
+        const response = await fetch(`${BASE_URL}pi/rescuers/${id}`, {
           method: 'DELETE',
         });
 

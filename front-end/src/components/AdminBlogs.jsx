@@ -15,15 +15,16 @@ import React, { useState, useEffect } from 'react';
 import './AdminBlog.css';
 import AdminSidebar from './AdminSidebar';
 
+
 const AdminBlogs = () => {
   const [blogs, setBlogs] = useState([]);
   const [newBlog, setNewBlog] = useState({ image: '', title: '', description: '' });
-
+  const BASE_URL = process.env.REACT_APP_SERVER_URL;
   // Fetch blogs
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/blogs');
+        const response = await fetch(`${BASE_URL}/blogs`);
         const data = await response.json();
         setBlogs(data);
       } catch (error) {
@@ -42,7 +43,7 @@ const AdminBlogs = () => {
     formData.append('description', newBlog.description);
 
     try {
-      const response = await fetch('http://localhost:5000/api/blogs', {
+      const response = await fetch(`${BASE_URL}/blogs`, {
         method: 'POST',
         body: formData,
       });
@@ -60,7 +61,7 @@ const AdminBlogs = () => {
   // Handle deleting a blog
   const handleDeleteBlog = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/blogs/${id}`, {
+      const response = await fetch(`${BASE_URL}/blogs/${id}`, {
         method: 'DELETE',
       });
       if (response.ok) {
