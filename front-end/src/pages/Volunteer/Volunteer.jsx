@@ -30,23 +30,7 @@ const Volunteer = () => {
   
     fetchIncidents();
   }, []);
-
-  // useEffect(() => {
-  //   const fetchIncidents = async () => {
-  //     try {
-  //       const response = await fetch('http://localhost:5000/api/unresolved-reports'); // New endpoint
-  //       const data = await response.json();
-  //       setIncidents(data); // Set the unresolved reports directly
-  //     } catch (error) {
-  //       console.error('Error fetching incidents:', error);
-  //     }
-  //   };
   
-  //   fetchIncidents();
-  // }, []);
-  
-
-
   const [showReportForm, setShowReportForm] = useState(false);
   const [showRequestForm, setShowRequestForm] = useState(false);
   const handleReportClick = () => setShowReportForm(true);
@@ -75,7 +59,7 @@ const Volunteer = () => {
           setIncidents((prevIncidents) => [...prevIncidents, formData]);
 
           try {
-            const response = await fetch(`${BASE_URL}/report`, {
+            const response = await fetch("https://disaster-management-portal-hkdu339b0-bharathipriya-rs-projects.vercel.app/apireport", {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',

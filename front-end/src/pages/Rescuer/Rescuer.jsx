@@ -183,7 +183,7 @@ const RescuerDashboard = () => {
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const response = await fetch(`{BASE_URL}/request`);
+        const response = await fetch(`${BASE_URL}/request`);
         const data = await response.json();
         setRequests(data);
       } catch (error) {
