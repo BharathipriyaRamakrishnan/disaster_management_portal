@@ -47,16 +47,16 @@ router.post('/', async (req, res) => {
 // @route DELETE /api/rescuers/:id
 router.delete('/:id', async (req, res) => {
   try {
-    const rescuer = await Rescuer.findById(req.params.id);
+    const rescuer = await Rescuer.findByIdAndDelete(req.params.id);
 
     if (!rescuer) {
       return res.status(404).json({ message: 'Rescuer not found' });
     }
 
-    await rescuer.remove();
-    res.json({ message: 'Rescuer deleted' });
+    res.status(200).json({ message: 'Rescuer deleted successfully' });
   } catch (error) {
-    res.status(500).json({ message: 'Server Error' });
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
@@ -82,4 +82,16 @@ router.put('/:id', async (req, res) => {
   });
   
 
+
+
+//to update dashboard stats
+  router.get('/dashboard-stats', async (req, res) => {
+    try {
+      const totalRescuers = await Rescuer.countDocuments();
+      res.json({ totalRescuers });
+    } catch (err) {
+      res.status(500).json({ message: "Failed to retrieve rescuer stats", error: err.message });
+    }
+  });
+  
 module.exports = router;

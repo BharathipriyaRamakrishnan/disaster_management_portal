@@ -7,11 +7,12 @@ import blog2 from '../../assets/images/blog2.jpg';
 import blog3 from '../../assets/images/blog3.jpg';
 import { useNavigate } from 'react-router-dom';
 import communityImage from '../../assets/images/communityImage.jpg'
+import axios from 'axios';
 
 const Volunteer = () => {
   const navigate = useNavigate();
   const [incidents, setIncidents] = useState([]);
-  useEffect(() => {
+ useEffect(() => {
     const fetchIncidents = async () => {
       try {
         const response = await fetch("http://localhost:5000/api/report");
@@ -28,6 +29,21 @@ const Volunteer = () => {
   
     fetchIncidents();
   }, []);
+
+  // useEffect(() => {
+  //   const fetchIncidents = async () => {
+  //     try {
+  //       const response = await fetch('http://localhost:5000/api/unresolved-reports'); // New endpoint
+  //       const data = await response.json();
+  //       setIncidents(data); // Set the unresolved reports directly
+  //     } catch (error) {
+  //       console.error('Error fetching incidents:', error);
+  //     }
+  //   };
+  
+  //   fetchIncidents();
+  // }, []);
+  
 
 
   const [showReportForm, setShowReportForm] = useState(false);
@@ -116,6 +132,48 @@ const Volunteer = () => {
       handleCloseModal();
     }
   };
+  const [blogs, setBlogs] = useState([]);
+
+useEffect(() => {
+  const fetchBlogs = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/blogs');
+      const data = await response.json();
+      setBlogs(data);
+    } catch (error) {
+      console.error('Error fetching blogs:', error);
+    }
+  };
+  fetchBlogs();
+}, []);
+
+
+
+
+
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    message: '',
+  });
+
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post('http://localhost:5000/send-mail', formData);
+      alert('Email sent successfully!');
+    } catch (error) {
+      console.error('Error sending email:', error);
+      alert('Failed to send email.');
+    }
+  };
+
 
   return (
     <div className="volunteer-page">
@@ -220,7 +278,7 @@ const Volunteer = () => {
       )}
 
             {/* Community Section */}
-            <section id="community" className="community-section">
+      <section id="community" className="community-section">
         <div className="community-content">
           <h2>Community Incidents</h2>
           {incidents.length === 0 ? (
@@ -240,6 +298,9 @@ const Volunteer = () => {
         </div>
         <img src={communityImage} alt="Community" className="community-image" />
       </section>
+
+
+
       
       {/* Donate Section */}
       <section id="donate" className="donate-section">
@@ -275,6 +336,20 @@ const Volunteer = () => {
           </div>
         </div>
       </section>
+      {/* <section className="latest-blog-section" id="blog">
+        <h2>LATEST BLOG</h2>
+        <div className="blog-cards">
+          {blogs.map((blog) => (
+            <div key={blog.id} className="blog-card">
+              <img src={`http://localhost:5000/${blog.image}`} alt={blog.title}/>
+              <h3>{blog.title}</h3>
+              <p>{blog.description}</p>
+              <button className="read-more-btn">Read More</button>
+            </div>
+          ))}
+        </div>
+      </section> */}
+
 
       {/* Emergency Contacts Section */}
       <section className="emergency-contacts-section">
@@ -304,7 +379,7 @@ const Volunteer = () => {
       </section>
 
       {/* Contact Section */}
-      <section className="contact-section" id="contact">
+      {/* <section className="contact-section" id="contact">
         <h2>Share Your Thoughts</h2>
         <form className="contact-form">
           <input type="text" placeholder="Your Name" required />
@@ -313,7 +388,41 @@ const Volunteer = () => {
           <textarea placeholder="Message" required></textarea>
           <button type="submit">Send</button>
         </form>
-      </section>
+      </section> */}
+
+<section className="contact-section" id="contact">
+      <h2>Share Your Thoughts</h2>
+      <form className="contact-form" onSubmit={handleSubmit}>
+        <input
+          type="text"
+          name="name"
+          placeholder="Your Name"
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="text"
+          name="phone"
+          placeholder="Phone Number"
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          onChange={handleChange}
+          required
+        />
+        <textarea
+          name="message"
+          placeholder="Message"
+          onChange={handleChange}
+          required
+        ></textarea>
+        <button type="submit">Send</button>
+      </form>
+    </section>
 
       {/* Footer Section */}
       <footer className="footer">

@@ -21,4 +21,15 @@ router.post('/', async (req, res) => {
   }
 });
 
+
+
+router.get('/dashboard-stats', async (req, res) => {
+  try {
+    const totalDonations = await Donation.countDocuments();
+    res.json({ totalDonations });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to retrieve donation stats", error: err.message });
+  }
+});
+
 module.exports = router;

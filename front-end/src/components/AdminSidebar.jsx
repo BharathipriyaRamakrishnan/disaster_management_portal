@@ -12,7 +12,7 @@ const AdminSidebar = () => {
       </div>
       <ul className="sidebar-menu">
         <li>
-          <a href="/admin" className="sidebar-link">
+          <a href="/AdminDashboard" className="sidebar-link">
             Dashboard
           </a>
         </li>

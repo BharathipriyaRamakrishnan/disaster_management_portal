@@ -11,6 +11,7 @@ import DonationForm from './components/DonationComponent';
 import AdminBlogs from './components/AdminBlogs';
 import AdminReports from './components/AdminReports';
 import AdminrescuerManagement from './components/AdminrescuerManagement';
+import AdminDashboard from './components/AdminDashboard';
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
       <Route path ="/AdminReports" element={<AdminReports/>} />
       <Route path ="/AdminrescuerManagement" element={<AdminrescuerManagement/>} />
       <Route path="/Rescuer" element={<Rescuer/>} />
+      <Route path="/AdminDashboard" element={<AdminDashboard/>} />
     </Routes>
     </>
   )

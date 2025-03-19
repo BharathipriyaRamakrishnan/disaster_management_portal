@@ -6,6 +6,9 @@ require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 5000;
+const path = require('path');
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 // Middleware
 app.use(cors());
@@ -21,12 +24,16 @@ const reportRoutes = require('./routes/reportRoutes');
 const donationRoutes = require('./routes/Donation');
 const requestRoutes = require('./routes/requestRoutes');
 const rescuerRoutes = require('./routes/rescuerRoutes');
+const blogRoutes = require('./routes/blogRoutes');
+const mailRoutes = require('./routes/mailRoutes');
 
 // Use Routes
 app.use('/api/report', reportRoutes);
 app.use('/api/donations', donationRoutes);
 app.use('/api/request', requestRoutes);
 app.use('/api/rescuers', rescuerRoutes);
+app.use('/api/blogs', blogRoutes);
+app.use('/api/send-mail', mailRoutes); 
 
 // Server
 app.listen(port, () => {

@@ -9,6 +9,7 @@ const requestSchema = new mongoose.Schema({
     longitude: { type: Number, required: true },
   },
   date: { type: Date, default: Date.now },
+  completed: { type: Boolean, default: false },
 });
 
 module.exports = mongoose.model('Request', requestSchema);

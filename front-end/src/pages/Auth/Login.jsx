@@ -29,7 +29,7 @@ const Login = () => {
     e.preventDefault();
   
     // Example validation for username and password
-    if (username === 'unity' && password === 'pwd123') {
+    if (username === 'rescuer' && password === 'rescuerpass') {
       // Redirect to the guide page upon successful login
       navigate('/rescuer');
     } else if (username === 'admin' && password === 'adminpass') {

@@ -5,7 +5,9 @@ import './AdminRescuerManagement.css';
 function AdminRescuerManagement() {
   const [editingRescuerId, setEditingRescuerId] = useState(null);
   const [rescuerData, setRescuerData] = useState([]);
+  const [filteredRescuers, setFilteredRescuers] = useState([]);
   const [overlayOpen, setOverlayOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState(''); // State for search term
   const [formData, setFormData] = useState({
     name: '',
     mobile: '',
@@ -23,6 +25,7 @@ function AdminRescuerManagement() {
       const response = await fetch('http://localhost:5000/api/rescuers');
       const data = await response.json();
       setRescuerData(data);
+      setFilteredRescuers(data); // Initialize the filteredRescuers with all data
     } catch (error) {
       console.error('Error fetching rescuers:', error);
     }
@@ -31,6 +34,23 @@ function AdminRescuerManagement() {
   useEffect(() => {
     fetchRescuers();
   }, []);
+
+  // Filter rescuer data based on the search term
+  useEffect(() => {
+    if (searchTerm === '') {
+      setFilteredRescuers(rescuerData);
+    } else {
+      const filtered = rescuerData.filter((rescuer) =>
+        rescuer.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredRescuers(filtered);
+    }
+  }, [searchTerm, rescuerData]);
+
+  // Handle search input change
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
 
   // Handle form input changes
   const handleInputChange = (e) => {
@@ -94,7 +114,7 @@ function AdminRescuerManagement() {
       });
     }
   };
-  
+
   // Handle update rescuer
   const handleUpdate = async (e) => {
     e.preventDefault();
@@ -111,6 +131,12 @@ function AdminRescuerManagement() {
 
     if (response.ok) {
       alert('Rescuer updated successfully!');
+      setRescuerData((prevData) => 
+        prevData.map((rescuer) =>
+          rescuer._id === editingRescuerId ? { ...rescuer, ...formData } : rescuer
+        )
+      );
+    
       setEditingRescuerId(null);
       setFormData({
         name: '',
@@ -119,19 +145,30 @@ function AdminRescuerManagement() {
         field: '',
         password: '',
       });
-      // Refetch rescuers
-      const updatedRescuers = await response.json();
-      setRescuerData(updatedRescuers);
     } else {
       alert('Error updating rescuer');
     }
   };
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+
+  const handleDelete = async (id) => {
+    // Confirm before deleting
+    if (window.confirm('Are you sure you want to delete this rescuer?')) {
+      try {
+        const response = await fetch(`http://localhost:5000/api/rescuers/${id}`, {
+          method: 'DELETE',
+        });
+
+        if (response.ok) {
+          alert('Rescuer deleted successfully!');
+          fetchRescuers(); // Refetch the rescuers to update the list
+        } else {
+          alert('Error deleting rescuer');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error deleting rescuer');
+      }
+    }
   };
 
   return (
@@ -146,6 +183,8 @@ function AdminRescuerManagement() {
             type="text"
             className="search-bar"
             placeholder="Search Rescuers..."
+            value={searchTerm}
+            onChange={handleSearchChange} // Handle search input change
           />
           <button className="add-rescuer-btn" onClick={() => setOverlayOpen(true)}>
             Add Rescuer
@@ -165,7 +204,7 @@ function AdminRescuerManagement() {
               </tr>
             </thead>
             <tbody>
-              {rescuerData.slice(0, 5).map((rescuer) => (
+              {filteredRescuers.slice(0, 5).map((rescuer) => (
                 <tr key={rescuer._id}>
                   <td>{rescuer.name}</td>
                   <td>{rescuer.mobile}</td>
@@ -192,127 +231,136 @@ function AdminRescuerManagement() {
         </div>
 
         {/* Add Rescuer Overlay */}
-{overlayOpen && (
-  <div className="unique-overlay">
-    <div className="unique-overlay-box">
-      <span
-        className="close-overlay"
-        onClick={() => setOverlayOpen(false)}
-      >
-        &times;
-      </span>
-      <h3>Add Rescuer</h3>
-      {error && <p className="error">{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="name"
-          placeholder="Name"
-          value={formData.name}
-          onChange={handleInputChange}
-          required
-        />
-        <input
-          type="text"
-          name="mobile"
-          placeholder="Mobile Number"
-          value={formData.mobile}
-          onChange={handleInputChange}
-          required
-        />
-        <input
-          type="text"
-          name="location"
-          placeholder="Location"
-          value={formData.location}
-          onChange={handleInputChange}
-          required
-        />
-        <input
-          type="text"
-          name="field"
-          placeholder="Field"
-          value={formData.field}
-          onChange={handleInputChange}
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Create Password"
-          value={formData.password}
-          onChange={handleInputChange}
-          required
-        />
-        <input
-          type="password"
-          name="confirmPassword"
-          placeholder="Re-enter Password"
-          value={formData.confirmPassword}
-          onChange={handleInputChange}
-          required
-        />
-        <button type="submit" className="save-btn">
-          Save
-        </button>
-      </form>
-    </div>
-  </div>
-)}
-        {editingRescuerId && (
-        <div className='unique-overlay'>
+        {overlayOpen && (
+          <div className="unique-overlay">
             <div className="unique-overlay-box">
-            <span
+              <span
                 className="close-overlay"
-                onClick={() => setEditingRescuerId(false)}
-            >
+                onClick={() => setOverlayOpen(false)}
+              >
                 &times;
-            </span>
-          <h3>Edit Rescuer</h3>
-          <form onSubmit={handleUpdate}>
-            <input
-              type="text"
-              name="name"
-              placeholder="Name"
-              value={formData.name}
-              onChange={handleChange}
-            />
-            <input
-              type="text"
-              name="mobile"
-              placeholder="Mobile"
-              value={formData.mobile}
-              onChange={handleChange}
-            />
-            <input
-              type="text"
-              name="location"
-              placeholder="Location"
-              value={formData.location}
-              onChange={handleChange}
-            />
-            <input
-              type="text"
-              name="field"
-              placeholder="Field"
-              value={formData.field}
-              onChange={handleChange}
-            />
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              value={formData.password}
-              onChange={handleChange}
-            />
-            <button type="submit" className='save-btn'>Update</button>
-          </form>
+              </span>
+              <h3>Add Rescuer</h3>
+              {error && <p className="error">{error}</p>}
+              <form onSubmit={handleSubmit}>
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required
+                />
+                <input
+                  type="text"
+                  name="mobile"
+                  placeholder="Mobile Number"
+                  value={formData.mobile}
+                  onChange={handleInputChange}
+                  required
+                />
+                <input
+                  type="text"
+                  name="location"
+                  placeholder="Location"
+                  value={formData.location}
+                  onChange={handleInputChange}
+                  required
+                />
+                <input
+                  type="text"
+                  name="field"
+                  placeholder="Field"
+                  value={formData.field}
+                  onChange={handleInputChange}
+                  required
+                />
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="Create Password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  required
+                />
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  placeholder="Re-enter Password"
+                  value={formData.confirmPassword}
+                  onChange={handleInputChange}
+                  required
+                />
+                <button type="submit" className="save-btn">
+                  Save
+                </button>
+              </form>
+            </div>
           </div>
-        </div>
-      )}  
+        )}
+
+        {editingRescuerId && (
+          <div className='unique-overlay'>
+            <div className="unique-overlay-box">
+              <span
+                className="close-overlay"
+                onClick={() => setEditingRescuerId(null)}
+              >
+                &times;
+              </span>
+              <h3>Edit Rescuer</h3>
+              {error && <p className="error">{error}</p>}
+              <form onSubmit={handleUpdate}>
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required
+                />
+                <input
+                  type="text"
+                  name="mobile"
+                  placeholder="Mobile Number"
+                  value={formData.mobile}
+                  onChange={handleInputChange}
+                  required
+                />
+                <input
+                  type="text"
+                  name="location"
+                  placeholder="Location"
+                  value={formData.location}
+                  onChange={handleInputChange}
+                  required
+                />
+                <input
+                  type="text"
+                  name="field"
+                  placeholder="Field"
+                  value={formData.field}
+                  onChange={handleInputChange}
+                  required
+                />
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                />
+                <button type="submit" className="save-btn">
+                  Update
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
 export default AdminRescuerManagement;
+
